@@ -10,5 +10,12 @@ public class Main {
 
         System.out.println(sum);
         System.out.println(multiply);
+
+        System.out.println("Hello");
+        System.out.println("Hello");
+        System.out.println("Hello");
+        System.out.println("Hello");
+        System.out.println("Hello");
+        System.out.println("Hello");
     }
 }
