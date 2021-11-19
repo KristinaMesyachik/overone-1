@@ -3,7 +3,7 @@ package by.overone.lesson26;
 import java.io.*;
 import java.util.Scanner;
 
-public class PrintStreamExample {
+public class ThirdExample {
     public static void main(String... args) throws IOException {
         File file = new File("1.txt");
         PrintStream filePrintStream = new PrintStream(file);

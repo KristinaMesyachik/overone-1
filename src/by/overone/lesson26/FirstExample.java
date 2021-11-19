@@ -2,7 +2,7 @@ package by.overone.lesson26;
 
 import java.io.*;
 
-public class InputStreamExample {
+public class FirstExample {
     public static void main(String[] args) throws IOException {
         InputStream inputStream = new FileInputStream("1.txt");
         int symbol;

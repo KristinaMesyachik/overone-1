@@ -3,7 +3,7 @@ package by.overone.lesson26;
 import java.io.*;
 import java.util.Scanner;
 
-public class OutputStreamExample {
+public class SecondExample {
     public static void main(String[] args) throws IOException {
 
         Scanner scanner = new Scanner(System.in);
