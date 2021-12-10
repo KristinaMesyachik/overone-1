@@ -25,6 +25,7 @@ public class BookRepository implements IBookRepository {
                 Long quantity = Long.valueOf(resultSet.getString(4));
                 books.add(new Book(bookId, title, author, quantity));
             }
+            connection.close();
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }
@@ -49,6 +50,7 @@ public class BookRepository implements IBookRepository {
                 Long quantity = Long.valueOf(resultSet.getString(4));
                 books.add(new Book(bookId, title, author, quantity));
             }
+            connection.close();
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }
