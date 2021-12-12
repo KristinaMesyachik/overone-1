@@ -12,12 +12,12 @@ public class BookRepository implements IBookRepository {
     public List<Book> readAll() {
         List<Book> books = new ArrayList<>();
         try {
-            Class.forName("org.postgresql.Driver");
+            Class.forName("com.mysql.jdbc.Driver");
             Connection connection = DriverManager
-                    .getConnection("jdbc:postgresql://localhost:5432/learningwords",
-                            "postgres", "12345");
+                    .getConnection("jdbc:mysql://localhost:3306/javaMySQL?autoReconnect=true&useSSL=false",
+                            "root", "mysql");
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM learningwords_sys.books");
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM books");
             while (resultSet.next()) {
                 Long bookId = Long.valueOf(resultSet.getString(1));
                 String title = resultSet.getString(2);
@@ -36,11 +36,12 @@ public class BookRepository implements IBookRepository {
     public List<Book> readByAuthor(String authorName) {
         List<Book> books = new ArrayList<>();
         try {
-            Class.forName("org.postgresql.Driver");
-            Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/learningwords",
-                    "postgres", "12345");
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection connection = DriverManager
+                    .getConnection("jdbc:mysql://localhost:3306/javaMySQL?autoReconnect=true&useSSL=false",
+                            "root", "mysql");
             PreparedStatement preparedStatement =
-                    connection.prepareStatement("SELECT * FROM learningwords_sys.books WHERE author = ?");
+                    connection.prepareStatement("SELECT * FROM books WHERE author = ?");
             preparedStatement.setString(1, authorName);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
@@ -55,5 +56,64 @@ public class BookRepository implements IBookRepository {
             e.printStackTrace();
         }
         return books;
+    }
+
+    @Override
+    public void addBook(String title, String author, Long quantity) {
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection connection = DriverManager
+                    .getConnection("jdbc:mysql://localhost:3306/javaMySQL?autoReconnect=true&useSSL=false",
+                            "root", "mysql");
+            PreparedStatement preparedStatement =
+                    connection.prepareStatement("INSERT INTO books (title, author, quantity) VALUE (?,?,?)");
+            preparedStatement.setString(1, title);
+            preparedStatement.setString(2, author);
+            preparedStatement.setLong(3, quantity);
+            preparedStatement.executeUpdate();
+            connection.close();
+            System.out.println("Book add");
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void deleteBook(int bookId) {
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection connection = DriverManager
+                    .getConnection("jdbc:mysql://localhost:3306/javaMySQL?autoReconnect=true&useSSL=false",
+                            "root", "mysql");
+            PreparedStatement preparedStatement =
+                    connection.prepareStatement("DELETE FROM books WHERE id = ?");
+            preparedStatement.setLong(1, bookId);
+            preparedStatement.executeUpdate();
+            connection.close();
+            System.out.println("Book delete");
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void updateBook(int bookId, String title, String author, long quantity) {
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection connection = DriverManager
+                    .getConnection("jdbc:mysql://localhost:3306/javaMySQL?autoReconnect=true&useSSL=false",
+                            "root", "mysql");
+            PreparedStatement preparedStatement =
+                    connection.prepareStatement("UPDATE books SET title = ?, author = ?, quantity = ? where id = ?");
+            preparedStatement.setString(1, title);
+            preparedStatement.setString(2, author);
+            preparedStatement.setLong(3, quantity);
+            preparedStatement.setLong(4, bookId);
+            preparedStatement.executeUpdate();
+            connection.close();
+            System.out.println("Book changes");
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

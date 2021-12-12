@@ -25,4 +25,19 @@ public class BookService implements IBookService {
         }
         return books;
     }
+
+    public void addBook(String title, String author, Long quantity) {
+        bookRepository.addBook(title, author, quantity);
+    }
+
+    @Override
+    public void deleteBook(int bookId) {
+        bookRepository.deleteBook(bookId);
+    }
+
+    @Override
+    public void updateBook(int bookId, String title, String author, long quantity) {
+        bookRepository.updateBook(bookId, title, author, quantity);
+
+    }
 }
