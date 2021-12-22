@@ -22,8 +22,9 @@ public class BookController {
             System.out.println("Select one of the following option:");
             System.out.println("1. Get all books");
             System.out.println("2. Get book by author");
-            System.out.println("3. Add book");
-            System.out.println("4. Exit");
+            System.out.println("3. Get book by id");
+            System.out.println("4. Add book");
+            System.out.println("5. Exit");
             int result = sc.nextInt();
             switch (result) {
                 case 1:
@@ -33,9 +34,12 @@ public class BookController {
                     readByAuthor();
                     break;
                 case 3:
-                    addBook();
+                    readById();
                     break;
                 case 4:
+                    addBook();
+                    break;
+                case 5:
                     System.out.println("Bye-bye my dear friend");
                     flag = false;
                     break;
@@ -75,42 +79,42 @@ public class BookController {
     }
 
     public void updateBook(int bookId) {
+        Book bookUpdate = bookService.readById(bookId);
+        boolean flag = true;
+        int column;
+        while (flag) {
+            System.out.println("Select one of the following columns");
+            System.out.println("1.Title");
+            System.out.println("2.Author");
+            System.out.println("3.Quantity");
+            System.out.println("4.Exit");
+            column = sc.nextInt();
 
-        System.out.println("Select one of the following columns");
-        System.out.println("1.Title");
-        System.out.println("2.Author");
-        System.out.println("3.Quantity");
-        System.out.println("4.Exit");
-        int column = sc.nextInt();
-        List<Book> books = bookService.readAll();
-        Book oldBook = books.get(bookId - 1);
-        String title = oldBook.getTitle();
-        String author = oldBook.getAuthor();
-        long quantity = oldBook.getQuantity();
+            sc.skip("((?<!\\R)\\s)*");
 
-        sc.skip("((?<!\\R)\\s)*");
-
-        switch (column) {
-            case 1:
-                System.out.println("Input new Title");
-                title = Main.sc.nextLine();
-                break;
-            case 2:
-                System.out.println("Input new Author");
-                author = Main.sc.nextLine();
-                break;
-            case 3:
-                System.out.println("Input new Quantity");
-                quantity = Main.sc.nextLong();
-                break;
-            case 4:
-                System.out.println("Exit for update");
-                break;
-            default:
-                System.err.println("Columns not find ... ");
+            switch (column) {
+                case 1:
+                    System.out.println("Old Title: " + bookUpdate.getTitle() + "Input new Title");
+                    bookUpdate.setTitle(Main.sc.nextLine());
+                    break;
+                case 2:
+                    System.out.println("Old Author: " + bookUpdate.getAuthor() + "Input new Author");
+                    bookUpdate.setAuthor(Main.sc.nextLine());
+                    break;
+                case 3:
+                    System.out.println("Old Quantity: " + bookUpdate.getQuantity() + "Input new Quantity");
+                    bookUpdate.setQuantity(Main.sc.nextLong());
+                    break;
+                case 4:
+                    System.out.println("Exit for update");
+                    flag = false;
+                    break;
+                default:
+                    System.err.println("Columns not find ... ");
+            }
         }
         try {
-            bookService.updateBook(bookId, title, author, quantity);
+            bookService.updateBook(bookUpdate);
         } catch (BookNotFoundException e) {
             System.err.println(e.getMessage());
         }
@@ -153,6 +157,20 @@ public class BookController {
             System.err.println(e.getMessage());
         }
         viewBooks(books);
+    }
+
+    public void readById() {
+        sc.skip("((?<!\\R)\\s)*");
+        System.out.println("Write id: ");
+        int idBook = sc.nextInt();
+        sc.skip("((?<!\\R)\\s)*");
+        Book book = null;
+        try {
+            book = bookService.readById(idBook);
+        } catch (BookNotFoundException e) {
+            System.err.println(e.getMessage());
+        }
+        System.out.println(book);
     }
 
     private void viewBooks(List<Book> books) {

@@ -36,8 +36,16 @@ public class BookService implements IBookService {
     }
 
     @Override
-    public void updateBook(int bookId, String title, String author, long quantity) {
-        bookRepository.updateBook(bookId, title, author, quantity);
+    public void updateBook(Book bookUpdate) {
+        bookRepository.updateBook(bookUpdate);
+    }
 
+    @Override
+    public Book readById(int idBook) {
+        Book foundBook = bookRepository.readById(idBook);
+        if (foundBook == null) {
+            throw new BookNotFoundException("Invalid id book");
+        }
+        return foundBook;
     }
 }

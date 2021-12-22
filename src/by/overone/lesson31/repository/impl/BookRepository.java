@@ -97,7 +97,7 @@ public class BookRepository implements IBookRepository {
     }
 
     @Override
-    public void updateBook(int bookId, String title, String author, long quantity) {
+    public void updateBook(Book bookUpdate) {
         try {
             Class.forName("com.mysql.jdbc.Driver");
             Connection connection = DriverManager
@@ -105,15 +105,43 @@ public class BookRepository implements IBookRepository {
                             "root", "mysql");
             PreparedStatement preparedStatement =
                     connection.prepareStatement("UPDATE books SET title = ?, author = ?, quantity = ? where id = ?");
-            preparedStatement.setString(1, title);
-            preparedStatement.setString(2, author);
-            preparedStatement.setLong(3, quantity);
-            preparedStatement.setLong(4, bookId);
+            preparedStatement.setString(1, bookUpdate.getTitle());
+            preparedStatement.setString(2, bookUpdate.getAuthor());
+            preparedStatement.setLong(3, bookUpdate.getQuantity());
+            preparedStatement.setLong(4, bookUpdate.getId());
             preparedStatement.executeUpdate();
             connection.close();
             System.out.println("Book changes");
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public Book readById(int idBook) {
+        Book foundBook = null;
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection connection = DriverManager
+                    .getConnection("jdbc:mysql://localhost:3306/javaMySQL?autoReconnect=true&useSSL=false",
+                            "root", "mysql");
+            PreparedStatement preparedStatement =
+                    connection.prepareStatement("SELECT * FROM books WHERE id = ?");
+            preparedStatement.setLong(1, idBook);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                Long bookId = Long.valueOf(resultSet.getString(1));
+                String title = resultSet.getString(2);
+                String author = resultSet.getString(3);
+                Long quantity = Long.valueOf(resultSet.getString(4));
+
+                foundBook = new Book(bookId, title, author, quantity);
+            }
+            connection.close();
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }
+
+        return foundBook;
     }
 }

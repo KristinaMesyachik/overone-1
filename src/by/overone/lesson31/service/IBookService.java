@@ -13,5 +13,7 @@ public interface IBookService {
 
     void deleteBook(int bookId);
 
-    void updateBook(int bookId, String title, String author, long quantity);
+    void updateBook(Book bookUpdate);
+
+    Book readById(int idBook);
 }
